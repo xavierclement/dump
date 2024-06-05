@@ -8,13 +8,6 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-if ! grep -q "Debian" /etc/os-release; then
-    echo "This script must be run onto a Debian-based system";
-    exit 1
-fi
-echo "Press ENTER to continue..."
-read
-
 apt update
 apt upgrade -y
 
@@ -34,11 +27,11 @@ packages_list=(build-essential
                git
                libc6
                libc6-dev
-               libc6-source
                libgmp-dev
                ksh
                libelf-dev
-               libjpeg62-turbo-dev
+	       libjpeg62
+               libjpeg62-dev
                libvorbis-dev
                libsdl2-dev
                libx11-dev
@@ -46,8 +39,13 @@ packages_list=(build-essential
                ltrace
                make
                nasm
-               ncurses
-               libncurses5-dev
+               ncurses-base
+	       ncurses-bin
+	       ncurses-doc
+	       ncurses-examples
+	       ncurses-hexedit
+	       ncurses-term 
+	       libncurses5-dev
                net-tools
                libopenal-dev
                python3-numpy
@@ -65,8 +63,8 @@ packages_list=(build-essential
                vim
                emacs-nox
                procps
-               libxcb-util0
-               libxcb-util0-dev
+               libxcb-util1
+               libxcb-util-dev
                zip
                zsh
                gcc-avr
@@ -90,19 +88,6 @@ packages_list=(build-essential
                golang
                libsystemd-dev
                libgudev-1.0-dev
-               php
-               php-dev
-               php-bcmath
-               php-cli
-               php-gd
-               php-mbstring
-               php-mysql
-               php-pdo
-               php-pear
-               php-xml
-               php-gettext-gettext
-               php-phar-io-version
-               php-theseer-tokenizer
                libsfml-dev
                libcsfml-dev
                libirrlicht-dev
@@ -110,20 +95,20 @@ packages_list=(build-essential
                cargo
                mariadb-server
                libx264-dev
-               lightspark
-               browser-plugin-lightspark
-               teams
-               libcriterion-dev)
+)
 
 apt install -y ${packages_list[@]}
 
 # Gradle
 wget https://services.gradle.org/distributions/gradle-8.5-bin.zip
-mkdir /opt/gradle && unzip -d /opt/gradle gradle-8.5-bin.zip && rm -f gradle-8.5-bin.zip
+mkdir /opt/gradle && unzip -d /opt/gradle/gradle-8.5-bin.zip && rm -f gradle-8.5-bin.zip
 echo 'export PATH=$PATH:/opt/gradle/gradle-8.5/bin' >> /etc/profile
 
 # Stack
 curl -sSL https://get.haskellstack.org/ | sh
+
+# Criterion
+./install_criterion.sh
 
 # CONFIG EMACS
 git clone https://github.com/Epitech/epitech-emacs.git
